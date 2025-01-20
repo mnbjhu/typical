@@ -8,5 +8,6 @@ mod state;
 mod ty;
 
 fn main() {
+    tracing_subscriber::fmt::init();
     Command::parse().run();
 }

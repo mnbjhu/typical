@@ -1,0 +1,4 @@
+Int;
+impl [] Number for Int;
+-----------------------
+Int: Number;

@@ -4,20 +4,19 @@ use crate::state::TypeSystem;
 
 pub mod args;
 pub mod bound;
-pub mod display;
 pub mod impl_;
 pub mod is_bound;
 pub mod is_exactly;
 pub mod parse;
 pub mod path;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Named {
     pub name: String,
     pub args: Vec<Type>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Type {
     Named(Named),
     Generic(String),

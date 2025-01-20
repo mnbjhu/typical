@@ -25,7 +25,7 @@ where
         .ignore_then(named_parser(type_parser()))
         .then_ignore(just(Token::For))
         .then(named_parser(type_parser()))
-        .map_with(|(to, from), e| {
+        .validate(|(to, from), e, _| {
             let state: &mut SimpleState<TypeSystem> = e.state();
             let args = state.generics.clone();
             state.clear_generics();

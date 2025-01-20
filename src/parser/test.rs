@@ -27,7 +27,10 @@ where
 {
     let impl_ = impl_parser();
     let decl = decl_parser();
-    let env = impl_.or(decl).separated_by(just(Token::Semi));
+    let env = impl_
+        .or(decl)
+        .separated_by(just(Token::Semi))
+        .allow_trailing();
     let goals = bound_parser()
         .map(|bound| {
             Logic::Stmt(Stmt::Extends {
@@ -36,6 +39,7 @@ where
             })
         })
         .separated_by(just(Token::Semi))
+        .allow_trailing()
         .collect();
     env.then(just(Token::Sep))
         .ignore_then(goals)

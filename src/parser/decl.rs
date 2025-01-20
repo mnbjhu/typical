@@ -34,7 +34,7 @@ mod tests {
     use chumsky::{extra::SimpleState, Parser as _};
 
     use crate::{
-        parser::{decl::decl_parser, lexer::lex, ty::type_parser},
+        parser::{decl::decl_parser, lexer::lex},
         state::TypeSystem,
     };
 

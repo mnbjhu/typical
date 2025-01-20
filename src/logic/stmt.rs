@@ -2,7 +2,7 @@ use crate::{state::TypeSystem, ty::Type};
 
 use super::{res::CheckRes, Logic};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Stmt {
     // If 'is' is a type-var resolves to 'Free' then it should block until it is known.
     // If the type-checker is stuck on a type var, it should set it's value to 'Unknown'
@@ -24,24 +24,6 @@ pub enum Stmt {
 }
 
 impl Stmt {
-    fn eval(&self, state: &mut TypeSystem) -> CheckRes {
-        match self {
-            Stmt::Exactly { ty, is } => {
-                todo!()
-            }
-            Stmt::Extends { sub, super_ } => {
-                todo!()
-            }
-            Stmt::HasMember {
-                ty,
-                member,
-                member_ty,
-            } => {
-                todo!()
-            }
-        }
-    }
-
     pub fn is_blocked(&self, state: &TypeSystem) -> bool {
         match self {
             Stmt::Exactly { is, .. } => matches!(is.resolve(state), Type::Var(_)),
@@ -56,7 +38,7 @@ impl Stmt {
     pub fn reduce(&self, state: &mut TypeSystem, infer: bool) -> Logic {
         match self {
             Stmt::Exactly { ty, is } => ty.is_exactly(is, state, infer),
-            Stmt::Extends { sub, super_ } => todo!(),
+            Stmt::Extends { sub, super_ } => sub.is_bound_by(super_, state, infer),
             Stmt::HasMember {
                 ty,
                 member,

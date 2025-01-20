@@ -9,3 +9,5 @@ chumsky = { git = "https://github.com/zesterer/chumsky.git", branch = "main" }
 logos = "0.14"
 clap = { version = "4", features = ["derive"] }
 ariadne = "0.5.0"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"

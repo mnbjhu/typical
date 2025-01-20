@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use tracing::info;
+
 use crate::ty::{args::GeneircArgs, bound::Bound, impl_::Impl, Named, Type};
 
 #[derive(Debug, Clone)]
@@ -25,10 +27,12 @@ impl TypeSystem {
     }
 
     pub fn add_decl(&mut self, name: String, args: GeneircArgs) {
+        info!("Adding decl: {}{}", name, args);
         self.decls.insert(name, args);
     }
 
     pub fn add_generic(&mut self, name: String) {
+        info!("Adding generic: {}", name);
         self.generics.args.push(name);
     }
 
@@ -37,6 +41,7 @@ impl TypeSystem {
     }
 
     pub fn add_impl(&mut self, impl_: Impl) {
+        info!("Adding impl: {}", impl_);
         self.impls.push(impl_);
     }
 

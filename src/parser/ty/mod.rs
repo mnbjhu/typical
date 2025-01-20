@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use chumsky::{
     container::Seq,
     error::Rich,
@@ -14,33 +12,10 @@ use chumsky::{
 
 use crate::{
     state::TypeSystem,
-    ty::{args::GeneircArgs, Named, Type},
+    ty::{Named, Type},
 };
 
 use super::lexer::Token;
-
-#[derive(Debug, Clone)]
-pub struct PState {
-    generics: GeneircArgs,
-    type_vars: HashMap<u32, Type>,
-    counter: u32,
-}
-
-impl PState {
-    pub fn new() -> Self {
-        Self {
-            generics: GeneircArgs::new(),
-            type_vars: HashMap::new(),
-            counter: 0,
-        }
-    }
-
-    pub fn new_type_var(&mut self) -> Type {
-        let id = self.counter;
-        self.counter += 1;
-        Type::Var(id)
-    }
-}
 
 pub fn type_parser<'a, I>(
 ) -> impl Parser<'a, I, Type, extra::Full<Rich<'a, Token>, SimpleState<TypeSystem>, ()>> + Clone
@@ -81,9 +56,4 @@ where
         name,
         args: args.unwrap_or_default(),
     })
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::state::TypeSystem;
 }

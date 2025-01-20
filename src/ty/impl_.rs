@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use core::fmt;
+use std::{collections::HashMap, fmt::Display};
 
 use super::{args::GeneircArgs, bound::Bound, Named, Type};
 
@@ -7,6 +8,12 @@ pub struct Impl {
     pub args: GeneircArgs,
     pub from: Named,
     pub to: Named,
+}
+
+impl Display for Impl {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "impl {}{} for {}", self.args, self.from, self.to)
+    }
 }
 
 impl Impl {

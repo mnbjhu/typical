@@ -1,4 +1,5 @@
 use crate::{
+    logic::Logic,
     parser::{lexer::lex, test::test_parser},
     state::TypeSystem,
 };
@@ -9,7 +10,7 @@ use std::{fs::read_to_string, ops::Range};
 pub fn test(input_name: String) {
     let input = read_to_string(&input_name).unwrap();
     let tokens = lex(&input);
-    let (ast, errors) = test_parser()
+    let (test, errors) = test_parser()
         .parse_with_state(tokens, &mut SimpleState::from(TypeSystem::new()))
         .into_output_errors();
     for error in errors {
@@ -27,6 +28,18 @@ pub fn test(input_name: String) {
             .eprint((&input_name, source))
             .expect("Failed to print report");
     }
-
-    println!("{:#?}", ast);
+    if let Some(test) = test {
+        let mut state = test.ts;
+        let mut goals: Logic = test.goals.into();
+        loop {
+            let next = goals.reduce(&mut state, true);
+            if next == goals {
+                break;
+            }
+            goals = next;
+        }
+        println!("{:#?}", goals);
+    } else {
+        println!("Not test generated");
+    }
 }

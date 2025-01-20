@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use super::bound::Bound;
 
 #[derive(Debug, Clone)]
@@ -18,5 +20,21 @@ impl GeneircArgs {
 impl Default for GeneircArgs {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl Display for GeneircArgs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.args.is_empty() {
+            return Ok(());
+        }
+        write!(f, "[")?;
+        for (index, arg) in self.args.iter().enumerate() {
+            if index != 0 {
+                write!(f, ", ")?;
+            }
+            write!(f, "{}", arg)?;
+        }
+        Ok(())
     }
 }
