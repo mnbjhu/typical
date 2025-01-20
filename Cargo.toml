@@ -1,0 +1,11 @@
+[package]
+name = "typical"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+thiserror = "2.0"
+chumsky = { git = "https://github.com/zesterer/chumsky.git", branch = "main" }
+logos = "0.14"
+clap = { version = "4", features = ["derive"] }
+ariadne = "0.5.0"
