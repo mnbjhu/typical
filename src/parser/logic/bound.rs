@@ -7,9 +7,11 @@ use chumsky::{
     Parser,
 };
 
-use crate::{state::TypeSystem, ty::bound::Bound};
-
-use super::{lexer::Token, ty::type_parser};
+use crate::{
+    parser::{lexer::Token, ty::type_parser},
+    state::TypeSystem,
+    ty::bound::Bound,
+};
 
 pub fn bound_parser<'a, I>(
 ) -> impl Parser<'a, I, Bound, extra::Full<Rich<'a, Token>, SimpleState<TypeSystem>, ()>> + Clone
@@ -19,6 +21,5 @@ where
     type_parser()
         .then_ignore(just(Token::Colon))
         .then(type_parser())
-        .map(|(ty, super_)| Bound { ty, super_ })
+        .map(|(sub, super_)| Bound { sub, super_ })
 }
-

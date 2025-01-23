@@ -1,5 +1,4 @@
-use super::lexer::Token;
-use crate::state::TypeSystem;
+use crate::{parser::lexer::Token, state::TypeSystem};
 use chumsky::{
     error::Rich,
     extra::{self, SimpleState},

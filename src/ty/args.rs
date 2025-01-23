@@ -1,40 +1,22 @@
-use std::fmt::Display;
+pub type GeneircArgs = Vec<String>;
 
-use super::bound::Bound;
-
-#[derive(Debug, Clone)]
-pub struct GeneircArgs {
-    pub args: Vec<String>,
-    pub bounds: Vec<Bound>,
+pub trait GeneircArgsExt {
+    fn get_string(&self) -> String;
 }
 
-impl GeneircArgs {
-    pub fn new() -> Self {
-        Self {
-            args: Vec::new(),
-            bounds: Vec::new(),
+impl GeneircArgsExt for GeneircArgs {
+    fn get_string(&self) -> String {
+        if self.is_empty() {
+            return "".to_string();
         }
-    }
-}
-
-impl Default for GeneircArgs {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl Display for GeneircArgs {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if self.args.is_empty() {
-            return Ok(());
-        }
-        write!(f, "[")?;
-        for (index, arg) in self.args.iter().enumerate() {
+        let mut result = "[".to_string();
+        for (index, arg) in self.iter().enumerate() {
             if index != 0 {
-                write!(f, ", ")?;
+                result.push_str(", ");
             }
-            write!(f, "{}", arg)?;
+            result.push_str(arg);
         }
-        Ok(())
+        result.push(']');
+        result
     }
 }

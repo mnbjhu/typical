@@ -1,5 +1,7 @@
 Int;
 Number;
-impl [] Number for Int;
+impl [] Number for Int
 -----------------------
-Int: Number;
+Int: Number
+-----------------------
+true

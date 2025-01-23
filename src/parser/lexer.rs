@@ -11,22 +11,54 @@ use logos::Logos;
 pub enum Token {
     #[token(":")]
     Colon,
+    #[token("=")]
+    Eq,
+    #[token("goal")]
+    Goal,
+    #[token("eval")]
+    Eval,
+    #[token("resolve")]
+    Resolve,
+    #[token("decl")]
+    Decl,
+    #[token("list")]
+    List,
     #[token(",")]
     Comma,
     #[token("[")]
     LBacket,
     #[token("]")]
     RBacket,
+    #[token("(")]
+    LParen,
+    #[token(")")]
+    RParen,
     #[token("_")]
     Underscore,
     #[token(";")]
     Semi,
     #[regex("-+")]
     Sep,
+    #[token("vars")]
+    Vars,
     #[token("impl")]
     Impl,
+    #[token("where")]
+    Where,
+    #[regex("new")]
+    New,
     #[token("for")]
     For,
+    #[token("&")]
+    And,
+    #[token("|")]
+    Or,
+    #[token("true")]
+    True,
+    #[token("false")]
+    False,
+    #[regex("\\$[0-9]+", |lex| lex.slice()[1..].to_string().parse::<u32>().unwrap())]
+    TypeVar(u32),
     #[regex("[a-zA-Z][a-zA-Z0-9_]*", |lex| lex.slice().to_string())]
     Ident(String),
     Error,
@@ -52,16 +84,32 @@ impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Token::Colon => write!(f, ":"),
+            Token::Eq => write!(f, "="),
             Token::Comma => write!(f, ","),
             Token::LBacket => write!(f, "["),
             Token::RBacket => write!(f, "]"),
+            Token::LParen => write!(f, "("),
+            Token::RParen => write!(f, ")"),
+            Token::And => write!(f, "&"),
+            Token::Or => write!(f, "|"),
             Token::Underscore => write!(f, "_"),
             Token::Semi => write!(f, ";"),
             Token::Sep => write!(f, "-"),
             Token::Impl => write!(f, "impl"),
+            Token::New => write!(f, "new"),
             Token::For => write!(f, "for"),
+            Token::List => write!(f, "list"),
             Token::Ident(ident) => write!(f, "{}", ident),
+            Token::Goal => write!(f, "goal"),
+            Token::Vars => write!(f, "vars"),
+            Token::Eval => write!(f, "eval"),
+            Token::Decl => write!(f, "decl"),
+            Token::True => write!(f, "true"),
+            Token::False => write!(f, "true"),
             Token::Error => write!(f, "error"),
+            Token::Where => write!(f, "where"),
+            Token::Resolve => write!(f, "resolve"),
+            Token::TypeVar(var) => write!(f, "${}", var),
         }
     }
 }

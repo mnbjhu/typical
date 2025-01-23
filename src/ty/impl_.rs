@@ -1,6 +1,8 @@
 use core::fmt;
 use std::{collections::HashMap, fmt::Display};
 
+use crate::ty::args::GeneircArgsExt;
+
 use super::{args::GeneircArgs, bound::Bound, Named, Type};
 
 #[derive(Debug, Clone)]
@@ -8,11 +10,18 @@ pub struct Impl {
     pub args: GeneircArgs,
     pub from: Named,
     pub to: Named,
+    pub bounds: Vec<Bound>,
 }
 
 impl Display for Impl {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "impl {}{} for {}", self.args, self.from, self.to)
+        write!(
+            f,
+            "impl {}{} for {}",
+            self.args.get_string(),
+            self.to,
+            self.from
+        )
     }
 }
 
@@ -22,8 +31,7 @@ impl Impl {
         if self.from.imply_generic_params(ty, &mut params) {
             Some((
                 self.to.parameterise(&params),
-                self.args
-                    .bounds
+                self.bounds
                     .iter()
                     .map(|b| b.parameterise(&params))
                     .collect(),

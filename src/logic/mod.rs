@@ -2,7 +2,7 @@ use stmt::Stmt;
 
 use crate::state::TypeSystem;
 
-pub mod res;
+pub mod pretty;
 pub mod stmt;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -15,16 +15,6 @@ pub enum Logic {
 }
 
 impl Logic {
-    pub fn is_blocked(&self, state: &TypeSystem) -> bool {
-        match self {
-            Logic::OneOf(items) | Logic::AllOf(items) => {
-                items.iter().all(|item| item.is_blocked(state))
-            }
-            Logic::Stmt(stmt) => stmt.is_blocked(state),
-            Logic::True | Logic::False => false,
-        }
-    }
-
     pub fn reduce(&self, state: &mut TypeSystem, infer: bool) -> Logic {
         match self {
             Logic::OneOf(logics) => {

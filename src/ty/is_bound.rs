@@ -12,6 +12,7 @@ impl Display for Type {
             Type::Named(named) => write!(f, "{}", named),
             Type::Generic(id) => write!(f, "{}", id),
             Type::Var(id) => write!(f, "${}", id),
+            Type::Free => write!(f, "<FREE>"),
         }
     }
 }
@@ -59,56 +60,7 @@ impl Type {
                     Logic::OneOf(logics)
                 }
             }
-            (a, b) => todo!(),
+            _ => todo!(),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::{logic::Logic, state::TypeSystem};
-
-    fn basic_ts() -> TypeSystem {
-        let mut ts = TypeSystem::new();
-        ts.parse_decl("Int").expect("parse_decl failed");
-        ts.parse_decl("Number").expect("parse_decl failed");
-        ts.parse_decl("Vec[T]").expect("parse_decl failed");
-        ts.parse_decl("Iter[T]").expect("parse_decl failed");
-        ts.parse_impl("[] Number for Int")
-            .expect("parse_impl failed");
-
-        ts.parse_impl("[T] Iter[T] for Vec[T]")
-            .expect("parse_impl failed");
-        ts
-    }
-
-    #[test]
-    fn test_eq() {
-        let mut ts = basic_ts();
-        let int = ts.parse_type("Int").expect("parse_type failed");
-        assert_eq!(int.is_bound_by(&int, &mut ts, false), Logic::True);
-    }
-
-    #[test]
-    fn test_basic() {
-        let mut ts = basic_ts();
-        let int = ts.parse_type("Int").expect("parse_type failed");
-        let number = ts.parse_type("Number").expect("parse_type failed");
-
-        assert_eq!(int.is_bound_by(&number, &mut ts, false), Logic::True);
-    }
-
-    #[test]
-    fn test_generic() {
-        let mut ts = basic_ts();
-        let int_list = ts.parse_type("Vec[Int]").expect("parse_type failed");
-        let int_iter = ts.parse_type("Iter[Int]").expect("parse_type failed");
-        let num_list = ts.parse_type("Vec[Number]").expect("parse_type failed");
-
-        assert_eq!(int_list.is_bound_by(&int_iter, &mut ts, false), Logic::True);
-        assert_eq!(
-            num_list.is_bound_by(&int_list, &mut ts, false),
-            Logic::False
-        );
     }
 }

@@ -4,10 +4,11 @@ use crate::state::TypeSystem;
 
 pub mod args;
 pub mod bound;
+pub mod decl;
 pub mod impl_;
+pub mod inst;
 pub mod is_bound;
 pub mod is_exactly;
-pub mod parse;
 pub mod path;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -21,15 +22,16 @@ pub enum Type {
     Named(Named),
     Generic(String),
     Var(u32),
+    Free,
 }
 
 impl Type {
     pub fn parameterise(&self, params: &HashMap<String, Type>) -> Type {
         match self {
             Type::Named(named) => Type::Named(named.parameterise(params)),
-            Type::Generic(id) => params[id].clone(),
+            Type::Generic(name) => params[name].clone(),
             Type::Var(_) => self.clone(),
-            _ => self.clone(),
+            Type::Free => panic!("Cannot parameterise free type"),
         }
     }
 
@@ -40,6 +42,7 @@ impl Type {
                 args: args.iter().map(|arg| arg.resolve(state)).collect(),
             }),
             Type::Var(id) => state.resolve(*id).unwrap_or_else(|| self.clone()),
+            Type::Free => panic!("Cannot resolve free type"),
             _ => self.clone(),
         }
     }
