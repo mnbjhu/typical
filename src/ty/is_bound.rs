@@ -43,13 +43,15 @@ impl Type {
                 let mut logics = vec![];
                 for impls in paths {
                     let mut ty = this.clone();
+                    let mut path_logic = vec![];
                     for impl_ in impls {
                         let (named, bounds) =
                             impl_.map(&ty).expect("Know to be mapped at this point");
-                        logics.extend(bounds.iter().cloned().map(|b| b.into()));
+                        path_logic.extend(bounds.iter().cloned().map(|b| b.into()));
                         ty = named;
                     }
-                    logics.push(ty.is_exactly(other, state, infer));
+                    path_logic.push(ty.is_exactly(other, state, infer));
+                    logics.push(Logic::AllOf(path_logic));
                 }
 
                 if logics.is_empty() {

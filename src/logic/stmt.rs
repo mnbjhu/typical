@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::{state::TypeSystem, ty::Type};
 
 use super::Logic;
@@ -30,6 +32,26 @@ impl Stmt {
             Stmt::Exactly { ty, is } => ty.is_exactly(is, state, infer),
             Stmt::Extends { sub, super_ } => sub.is_bound_by(super_, state, infer),
             Stmt::HasMember { .. } => todo!(),
+        }
+    }
+}
+
+impl Display for Stmt {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Stmt::Exactly { ty, is } => {
+                write!(f, "{ty} = {is}")
+            }
+            Stmt::Extends { sub, super_ } => {
+                write!(f, "{super_}: {sub}")
+            }
+            Stmt::HasMember {
+                ty,
+                member,
+                member_ty,
+            } => {
+                write!(f, "{ty} has member '{member}' with type {member_ty}")
+            }
         }
     }
 }

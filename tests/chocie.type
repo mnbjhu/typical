@@ -1,0 +1,9 @@
+Int;
+List[U];
+Display;
+impl [T] Display for List[T] where T: Display;
+impl [] Display for List[Int];
+-----------------------
+List[Int]: Display;
+-----------------------
+true
